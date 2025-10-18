@@ -2,3 +2,4 @@
 # Add any dependencies here in the future, for example:
 # requests==2.31.0
 # numpy==1.27.5
+#python=1.3
