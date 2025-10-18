@@ -1,4 +1,3 @@
-# tests/test_hello.py
 import unittest
 from app.hello import say_hello
 

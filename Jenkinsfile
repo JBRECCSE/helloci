@@ -1,7 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON_CMD = 'py' // Use Python launcher on Windows
+    }
+
     stages {
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/JBRECCSE/helloci.git'
@@ -10,14 +15,16 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install --upgrade pip'
-                bat 'python -m pip install -r requirements.txt'
+                // Upgrade pip
+                bat "${env.PYTHON_CMD} -m pip install --upgrade pip"
+                // Install dependencies if any
+                bat "${env.PYTHON_CMD} -m pip install -r requirements.txt"
             }
         }
 
         stage('Test') {
             steps {
-                bat 'python -m unittest discover tests'
+                bat "${env.PYTHON_CMD} -m unittest discover tests"
             }
         }
 
@@ -25,6 +32,18 @@ pipeline {
             steps {
                 bat 'deploy.bat'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Build and deploy succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs.'
         }
     }
 }
